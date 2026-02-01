@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+
+    <title>Findoc</title>
+    <link rel="shortcut icon" href="../img/logo.svg" type="image/x-icon">
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="../assets/css/tailwind.css">
+    
+    <!-- Lucide Icons (offline) -->
+    <script src="../assets/icons/lucide.min.js"></script>
+    
+    <!-- SortableJS para drag & drop -->
+    <script src="../libs/sortable.min.js"></script>
+</head>
+<body class="h-screen bg-white font-sans antialiased overflow-hidden">
+    <!-- Conteúdo Principal -->
+    <div class="h-full">
+        <!-- Área de Upload (estado inicial) -->
+        <div id="uploadArea" class="h-full flex flex-col items-center justify-center p-8">
+            <div class="max-w-md w-full">
+                <!-- Ícone central grande -->
+                <!-- <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 flex items-center justify-center mx-auto mb-8">
+                    <i data-lucide="layers" class="w-12 h-12 text-green-600"></i>
+                </div> -->
+
+                <!-- Dicas rápidas -->
+                <div class="mb-8 pb-6 border-b border-gray-200">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="mouse-default" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <p class="text-xs text-gray-600">Clique para adicionar</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="move" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <p class="text-xs text-gray-600">Arraste e solte</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="list-ordered" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <p class="text-xs text-gray-600">Reordene depois</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Área de Drag & Drop -->
+                <div id="dropZone"
+                    class="border-3 border-dashed border-gray-300 rounded-xl bg-gray-50 p-12 text-center cursor-default hover:border-green-400 hover:bg-green-50/50 transition-all duration-200 mb-6">
+                    <div class="space-y-3">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mx-auto">
+                            <i data-lucide="upload" class="w-6 h-6 text-green-600"></i>
+                        </div>
+                        <p class="text-gray-700 font-medium">Arraste e solte os arquivos aqui</p>
+                        <p class="text-sm text-gray-500">Máximo 10 arquivos por vez</p>
+                    </div>
+                </div>
+
+                <!-- Botão de procurar -->
+                <div class="text-center">
+                    <button onclick="triggerFileInput()"
+                        class="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 hover:border-gray-400 inline-flex items-center space-x-2 transition-all duration-200">
+                        <i data-lucide="folder-open" class="w-5 h-5"></i>
+                        <span>Procurar arquivos</span>
+                    </button>
+                    <input type="file" id="fileInput" class="hidden" multiple accept=".pdf">
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de Listagem (aparece após upload) -->
+        <div id="listArea" class="h-full hidden flex-col">
+            <!-- Header da listagem -->
+            <div class="border-b border-gray-200 bg-white px-6 py-4 mt-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="backToUpload()" class="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                            <i data-lucide="chevron-left" class="w-5 h-5 text-gray-500"></i>
+                        </button>
+                        <div>
+                            <p class="text-sm text-gray-500">
+                                <span id="fileCountText">0 arquivos</span> • 
+                                <span id="pageCountText">0 páginas</span> • 
+                                <span id="totalSizeText">0 MB</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <button onclick="addMoreFiles()"
+                            class="px-4 py-2 bg-white text-sm border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 hover:border-gray-400 inline-flex items-center space-x-2 transition-all duration-200">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Adicionar mais</span>
+                        </button>
+                        <input type="file" id="additionalFileInput" class="hidden" multiple accept=".pdf">
+                        <button onclick="mergePDFs()" id="mergeBtn"
+                            class="px-5 py-2 bg-gradient-to-r text-sm from-green-600 to-green-700 text-white rounded-lg font-medium hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2 transition-all duration-200">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                            <span>Juntar PDFs</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de arquivos -->
+            <div id="filesList" class="flex-1 overflow-y-auto p-6 space-y-3">
+                <!-- Arquivos serão inseridos aqui -->
+                <div id="emptyListMessage" class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="file" class="w-8 h-8 text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-500">Nenhum arquivo adicionado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/js/join.js"></script>
+</body>
+</html>

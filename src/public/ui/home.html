@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+
+
+    <title>Findoc</title>
+    <link rel="shortcut icon" href="../img/logo.svg" type="image/x-icon">
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="../assets/css/tailwind.css">
+    
+    <!-- Lucide Icons (offline) -->
+    <script src="../assets/icons/lucide.min.js"></script>
+</head>
+<body class="hi-full xs:h-screen w-full xs:w-screen flex items-center justify-center bg-slate-100">
+   
+
+    <!-- Conteúdo principal compacto -->
+    <div class="flex-1 overflow-auto p-4 max-w-6xl mx-auto">
+        <!-- Welcome e stats -->
+        <div class="mb-6">
+                     
+            <div class="flex items-center space-x-4 mt-3">
+                <div class="flex items-center space-x-2 text-sm text-gray-600">
+                    <i data-lucide="hard-drive" class="w-4 h-4"></i>
+                    <span id="memory">2.4 GB disponíveis</span>
+                </div>
+                <div class="flex items-center space-x-2 text-sm text-gray-600">
+                    <i data-lucide="clock" class="w-4 h-4"></i>
+                    <span>15 documentos trabalhados</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de ferramentas (estilo compacto SHAREit) -->
+        <div class="grid grid-cols-5 gap-4 mb-10 mt-16">
+            <!-- Criar Novo -->
+            <div class="col-span-2 bg-gradient-to-tl h-52 from-blue-300 via-65% via-blue-50 to-blue-50 border border-blue-200 rounded-xl p-4 hover:shadow-md transition-shadow cursor-default group">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                        <i data-lucide="file-plus" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded">Rápido</span>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-1">Criar PDF</h3>
+                <p class="text-gray-600 text-sm">Do zero ou usando templates</p>
+            </div>
+
+            <!-- Juntar PDFs -->
+            <div onclick="openJoin()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition-all cursor-default">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-3">
+                    <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-1">Juntar</h3>
+                <p class="text-gray-600 text-sm">Combine vários PDFs</p>
+            </div>
+
+            <!-- Dividir PDF -->
+            <div onclick="openCut()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-red-300 hover:shadow-md transition-all cursor-default">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mb-3">
+                    <i data-lucide="scissors" class="w-5 h-5 text-white"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-1">Dividir</h3>
+                <p class="text-gray-600 text-sm">Extraia páginas</p>
+            </div>
+
+            <!-- Assinar -->
+            <div onclick="openSinature()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-amber-300 hover:shadow-md transition-all cursor-default">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mb-3">
+                    <i data-lucide="pen-tool" class="w-5 h-5 text-white"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-1">Assinar</h3>
+                <p class="text-gray-600 text-sm">Adicione sua assinatura</p>
+            </div>
+        </div>
+
+        <!-- Templates populares -->
+        <div class="mb-6 hidden">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-gray-800">Templates Prontos</h2>
+               
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-white border border-gray-200 h-20 flex items-center rounded-lg p-3 hover:border-purple-300 transition-colors cursor-default">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-md bg-purple-100 flex items-center justify-center">
+                            <i data-lucide="receipt" class="w-4 h-4 text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800 text-sm">Recibo</h4>
+                            <p class="text-gray-500 text-xs">Pagamentos rápidos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 h-20 flex items-center rounded-lg p-3 hover:border-blue-300 transition-colors cursor-default">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-md bg-blue-100 flex items-center justify-center">
+                            <i data-lucide="file-check" class="w-4 h-4 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800 text-sm">Proposta</h4>
+                            <p class="text-gray-500 text-xs">Para clientes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 h-20 flex items-center rounded-lg p-3 hover:border-green-300 transition-colors cursor-default">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-md bg-green-100 flex items-center justify-center">
+                            <i data-lucide="handshake" class="w-4 h-4 text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800 text-sm">Contrato</h4>
+                            <p class="text-gray-500 text-xs">Acordo simples</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 h-20 flex items-center rounded-lg p-3 hover:border-amber-300 transition-colors cursor-default">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center">
+                            <i data-lucide="clipboard-check" class="w-4 h-4 text-amber-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-800 text-sm">Declaração</h4>
+                            <p class="text-gray-500 text-xs">Modelo formal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimos documentos e status -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-16">
+            <!-- Últimos documentos -->
+            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-semibold text-gray-800">Documentos Recentes</h3>
+                        <button onclick="window.location.reload()" class="text-gray-500 hover:text-gray-700">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="divide-y divide-gray-100" id="list-files">
+                    <!-- Documento 1 -->
+                    <!-- <div class="px-4 py-3 hover:bg-gray-50 cursor-default">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded bg-red-50 flex items-center justify-center">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-red-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800 text-sm">Proposta_Cliente.pdf</h4>
+                                    <p class="text-gray-500 text-xs">Modificado há 2h • 5 páginas</p>
+                                </div>
+                            </div>
+                            <button class="p-1 hover:bg-gray-100 rounded">
+                                <i data-lucide="more-vertical" class="w-4 h-4 text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                     -->
+                    <!-- Documento 2 -->
+                    <!-- <div class="px-4 py-3 hover:bg-gray-50 cursor-default">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded bg-green-50 flex items-center justify-center">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-green-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800 text-sm">Recibo_1234.pdf</h4>
+                                    <p class="text-gray-500 text-xs">Ontem • 2 páginas</p>
+                                </div>
+                            </div>
+                            <button class="p-1 hover:bg-gray-100 rounded">
+                                <i data-lucide="more-vertical" class="w-4 h-4 text-gray-500"></i>
+                            </button>
+                        </div>
+                    </div> -->
+                </div>
+                
+               
+            </div>
+
+            <!-- Ações rápidas -->
+            <div class="bg-white border border-gray-200 rounded-xl p-4">
+                <h3 class="font-semibold text-gray-800 mb-4">Mais Ferramentas</h3>
+                
+                <div class="space-y-3">
+                    <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
+                                <i data-lucide="lock" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-medium text-gray-800 text-sm">Proteger PDF</h4>
+                                <p class="text-gray-500 text-xs">Adicione senha</p>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                    </button>
+                    
+                    <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-all">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
+                                <i data-lucide="image" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-medium text-gray-800 text-sm">Imagem para PDF</h4>
+                                <p class="text-gray-500 text-xs">Converter fotos</p>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                    </button>
+                    
+                    <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-all">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
+                                <i data-lucide="stamp" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-medium text-gray-800 text-sm">Carimbos</h4>
+                                <p class="text-gray-500 text-xs">PAGO, APROVADO, etc.</p>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="../../renderer.js"></script>
+    <script src="../assets//js/home.js"></script>
+</body>
+</html>

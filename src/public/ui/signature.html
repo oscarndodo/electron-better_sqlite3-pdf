@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Findoc</title>
+    <link rel="shortcut icon" href="../img/logo.svg" type="image/x-icon">
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="../assets/css/tailwind.css">
+    
+    <!-- Lucide Icons (offline) -->
+    <script src="../assets/icons/lucide.min.js"></script>
+</head>
+<body class="h-screen bg-white font-sans antialiased overflow-hidden">
+    <!-- Conteúdo Principal -->
+    <div class="h-full">
+        <!-- Tela de Upload -->
+        <div id="uploadScreen" class="h-full flex flex-col items-center justify-center p-8">
+            <div class="max-w-md w-full">
+                <!-- Ícone -->
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="pen-tool" class="w-10 h-10 text-blue-600"></i>
+                </div>
+
+                <!-- Título -->
+                <div class="text-center mb-8">
+                    <h1 class="text-xl font-bold text-gray-900 mb-2">Adicionar Assinatura ao PDF</h1>
+                    <p class="text-gray-600 text-sm">Selecione o PDF e escolha o tipo de assinatura</p>
+                </div>
+
+                <!-- Área de Upload -->
+                <div id="dropZone"
+                    class="border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 p-8 text-center cursor-default hover:border-blue-400 hover:bg-blue-50 transition-all mb-4">
+                    <div class="space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mx-auto">
+                            <i data-lucide="upload" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <p class="text-gray-700 font-medium">Arraste seu PDF aqui</p>
+                        <p class="text-xs text-gray-500">Ou clique para selecionar</p>
+                    </div>
+                </div>
+
+                <!-- Botão -->
+                <div class="text-center">
+                    <button onclick="triggerFileInput()"
+                        class="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 inline-flex items-center justify-center space-x-2 transition-all">
+                        <i data-lucide="file" class="w-5 h-5"></i>
+                        <span>Selecionar PDF</span>
+                    </button>
+                    <input type="file" id="fileInput" class="hidden" accept=".pdf">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Assinatura -->
+        <div id="signatureScreen" class="h-full hidden flex-col">
+            <!-- Cabeçalho -->
+            <div class="border-b border-gray-200 bg-white px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <button onclick="backToUpload()" class="p-1 hover:bg-gray-100 rounded">
+                            <i data-lucide="chevron-left" class="w-5 h-5 text-gray-500"></i>
+                        </button>
+                        <div class="max-w-xs">
+                            <p id="fileName" class="text-sm font-medium text-gray-900 truncate">arquivo.pdf</p>
+                            <p id="fileInfo" class="text-xs text-gray-500">0 páginas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <button onclick="applySignature()" id="applyBtn"
+                            class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded text-sm font-medium hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center space-x-2 transition-all">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            <span>Aplicar assinatura</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="flex-1 overflow-auto p-4">
+                <!-- Instruções -->
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">
+                        Escolha o tipo de assinatura e configure como deseja
+                    </p>
+                </div>
+
+                <!-- Tipos de Assinatura -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-800 mb-3">Tipo de Assinatura</h3>
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <button onclick="selectSignatureType('text')" id="typeTextBtn"
+                            class="p-3 border-2 border-blue-300 bg-blue-50 rounded-lg text-center transition-all">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="type" class="w-4 h-4 text-blue-600"></i>
+                            </div>
+                            <p class="text-xs font-medium text-gray-800">Texto</p>
+                        </button>
+                        
+                        <button onclick="selectSignatureType('stamp')" id="typeStampBtn"
+                            class="p-3 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 rounded-lg text-center transition-all">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="stamp" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <p class="text-xs font-medium text-gray-800">Carimbo</p>
+                        </button>
+                        
+                        <button onclick="selectSignatureType('image')" id="typeImageBtn"
+                            class="p-3 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 rounded-lg text-center transition-all">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+                                <i data-lucide="image" class="w-4 h-4 text-gray-600"></i>
+                            </div>
+                            <p class="text-xs font-medium text-gray-800">Imagem</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel de Configuração -->
+                <div id="configPanel" class="space-y-6">
+                    <!-- Painel de Texto -->
+                    <div id="textPanel" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Texto da assinatura
+                            </label>
+                            <input type="text" id="signatureText" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                placeholder="Ex: Assinado Digitalmente" value="Assinado Digitalmente">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Modelos rápidos
+                            </label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setStampText('PAGO')" class="px-3 py-1.5 bg-green-100 text-green-800 text-xs rounded hover:bg-green-200">
+                                    PAGO
+                                </button>
+                                <button onclick="setStampText('APROVADO')" class="px-3 py-1.5 bg-blue-100 text-blue-800 text-xs rounded hover:bg-blue-200">
+                                    APROVADO
+                                </button>
+                                <button onclick="setStampText('CONFIDENCIAL')" class="px-3 py-1.5 bg-red-100 text-red-800 text-xs rounded hover:bg-red-200">
+                                    CONFIDENCIAL
+                                </button>
+                                <button onclick="setStampText('ASSINADO')" class="px-3 py-1.5 bg-purple-100 text-purple-800 text-xs rounded hover:bg-purple-200">
+                                    ASSINADO
+                                </button>
+                                <button onclick="setStampText('ORIGINAL')" class="px-3 py-1.5 bg-yellow-100 text-yellow-800 text-xs rounded hover:bg-yellow-200">
+                                    ORIGINAL
+                                </button>
+                                <button onclick="setStampText('CÓPIA')" class="px-3 py-1.5 bg-gray-100 text-gray-800 text-xs rounded hover:bg-gray-200">
+                                    CÓPIA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel de Carimbo -->
+                    <div id="stampPanel" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Tipo de Carimbo
+                            </label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="selectStampStyle('round')" id="stampRoundBtn"
+                                    class="p-3 border border-gray-200 rounded text-center">
+                                    <div class="w-8 h-8 rounded-full border-2 border-red-500 mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-xs font-bold text-red-500">PAGO</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">Redondo</p>
+                                </button>
+                                
+                                <button onclick="selectStampStyle('square')" id="stampSquareBtn"
+                                    class="p-3 border border-gray-200 rounded text-center">
+                                    <div class="w-8 h-8 border-2 border-blue-500 mx-auto mb-2 flex items-center justify-center">
+                                        <span class="text-xs font-bold text-blue-500">APROV</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">Quadrado</p>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Texto do Carimbo
+                            </label>
+                            <input type="text" id="stampText" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                value="PAGO">
+                        </div>
+                    </div>
+
+                    <!-- Painel de Imagem -->
+                    <div id="imagePanel" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Carregar imagem
+                            </label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-default hover:border-blue-400 hover:bg-blue-50"
+                                 onclick="triggerImageInput()">
+                                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mx-auto mb-3">
+                                    <i data-lucide="upload" class="w-5 h-5 text-blue-600"></i>
+                                </div>
+                                <p class="text-sm text-gray-700">Clique para selecionar imagem</p>
+                                <p class="text-xs text-gray-500 mt-1">PNG, JPG, SVG (max 5MB)</p>
+                            </div>
+                            <input type="file" id="imageInput" class="hidden" accept="image/*">
+                        </div>
+                        
+                        <div id="imagePreviewContainer" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Pré-visualização
+                            </label>
+                            <div class="border border-gray-200 rounded p-4">
+                                <img id="imagePreview" class="max-w-full max-h-32 mx-auto" src="" alt="Pré-visualização">
+                            </div>
+                            <button onclick="clearImage()" class="mt-2 text-sm text-red-600 hover:text-red-800">
+                                Remover imagem
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Configurações Comuns -->
+                    <div class="pt-4 border-t border-gray-200 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Posição na página
+                            </label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setPosition('top-left')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Superior Esquerdo
+                                </button>
+                                <button onclick="setPosition('top-center')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Superior Centro
+                                </button>
+                                <button onclick="setPosition('top-right')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Superior Direito
+                                </button>
+                                <button onclick="setPosition('bottom-left')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Inferior Esquerdo
+                                </button>
+                                <button onclick="setPosition('bottom-center')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Inferior Centro
+                                </button>
+                                <button onclick="setPosition('bottom-right')" class="p-2 border border-gray-200 rounded text-xs hover:border-blue-300">
+                                    Inferior Direito
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Páginas para assinar
+                            </label>
+                            <input type="text" id="signaturePages" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                placeholder="Ex: 1,3-5 (deixe em branco para todas)">
+                            <p class="text-xs text-gray-500 mt-1">Deixe em branco para aplicar em todas as páginas</p>
+                        </div>
+                    </div>
+
+                    <!-- Pré-visualização -->
+                    <div class="pt-4 border-t border-gray-200">
+                        <h3 class="text-sm font-semibold text-gray-800 mb-3">Pré-visualização</h3>
+                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <div id="signaturePreview" class="flex items-center justify-center h-20">
+                                <div class="px-4 py-2 bg-white border border-gray-300 rounded shadow-sm">
+                                    <p class="text-sm font-medium text-gray-800">Assinado Digitalmente</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 text-center mt-2">Assinatura será aplicada aqui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // VARIÁVEIS
+        // ============================================
+        let currentFile = null;
+        let signatureType = 'text'; // text, stamp, image
+        let stampStyle = 'round'; // round, square
+        let signaturePosition = 'bottom-right';
+        let selectedImage = null;
+
+        // ============================================
+        // INICIALIZAÇÃO
+        // ============================================
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupDragAndDrop();
+        });
+
+        // ============================================
+        // DRAG & DROP
+        // ============================================
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-blue-400', 'bg-blue-50');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+                    
+                    if (eventName === 'drop') {
+                        const file = e.dataTransfer.files[0];
+                        if (file && (file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf'))) {
+                            loadPDF(file);
+                        }
+                    }
+                });
+            });
+        }
+
+        // ============================================
+        // FUNÇÕES PRINCIPAIS
+        // ============================================
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                loadPDF(e.target.files[0]);
+            }
+        });
+
+        async function loadPDF(file) {
+            console.log('Carregando PDF:', file.name);
+            
+            currentFile = file;
+            
+            // Simular informações
+            const totalPages = await simulatePageCount(file);
+            
+            // Mostrar informações
+            document.getElementById('fileName').textContent = 
+                file.name.length > 30 ? file.name.substring(0, 27) + '...' : file.name;
+            document.getElementById('fileInfo').textContent = `${totalPages} páginas`;
+            
+            // Ir para tela de assinatura
+            document.getElementById('uploadScreen').classList.add('hidden');
+            document.getElementById('signatureScreen').classList.remove('hidden');
+            document.getElementById('signatureScreen').classList.add('flex');
+            
+            // Resetar botão
+            document.getElementById('applyBtn').disabled = false;
+            
+            console.log('PDF carregado com sucesso');
+        }
+
+        async function simulatePageCount(file) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(Math.floor(Math.random() * 20) + 5); // 5-25 páginas
+                }, 100);
+            });
+        }
+
+        // ============================================
+        // TIPOS DE ASSINATURA
+        // ============================================
+        function selectSignatureType(type) {
+            console.log('Selecionando tipo:', type);
+            signatureType = type;
+            
+            // Atualizar botões
+            document.getElementById('typeTextBtn').className = 
+                type === 'text' 
+                    ? 'p-3 border-2 border-blue-300 bg-blue-50 rounded-lg text-center transition-all'
+                    : 'p-3 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 rounded-lg text-center transition-all';
+            
+            document.getElementById('typeStampBtn').className = 
+                type === 'stamp' 
+                    ? 'p-3 border-2 border-blue-300 bg-blue-50 rounded-lg text-center transition-all'
+                    : 'p-3 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 rounded-lg text-center transition-all';
+            
+            document.getElementById('typeImageBtn').className = 
+                type === 'image' 
+                    ? 'p-3 border-2 border-blue-300 bg-blue-50 rounded-lg text-center transition-all'
+                    : 'p-3 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 rounded-lg text-center transition-all';
+            
+            // Mostrar/ocultar painéis
+            document.getElementById('textPanel').classList.toggle('hidden', type !== 'text');
+            document.getElementById('stampPanel').classList.toggle('hidden', type !== 'stamp');
+            document.getElementById('imagePanel').classList.toggle('hidden', type !== 'image');
+            
+            // Atualizar pré-visualização
+            updatePreview();
+        }
+
+        function selectStampStyle(style) {
+            stampStyle = style;
+            
+            // Atualizar botões
+            document.getElementById('stampRoundBtn').className = 
+                style === 'round' 
+                    ? 'p-3 border-2 border-blue-300 bg-blue-50 rounded text-center'
+                    : 'p-3 border border-gray-200 rounded text-center';
+            
+            document.getElementById('stampSquareBtn').className = 
+                style === 'square' 
+                    ? 'p-3 border-2 border-blue-300 bg-blue-50 rounded text-center'
+                    : 'p-3 border border-gray-200 rounded text-center';
+            
+            updatePreview();
+        }
+
+        function setStampText(text) {
+            if (signatureType === 'text') {
+                document.getElementById('signatureText').value = text;
+            } else if (signatureType === 'stamp') {
+                document.getElementById('stampText').value = text;
+            }
+            updatePreview();
+        }
+
+        // ============================================
+        // IMAGEM
+        // ============================================
+        function triggerImageInput() {
+            document.getElementById('imageInput').click();
+        }
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                loadImage(e.target.files[0]);
+            }
+        });
+
+        function loadImage(file) {
+            // Validar tamanho (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('A imagem deve ter no máximo 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImage = {
+                    name: file.name,
+                    data: e.target.result,
+                    type: file.type
+                };
+                
+                // Mostrar pré-visualização
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                
+                updatePreview();
+                console.log('Imagem carregada:', file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImage() {
+            selectedImage = null;
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('imageInput').value = '';
+            updatePreview();
+        }
+
+        // ============================================
+        // POSIÇÃO
+        // ============================================
+        function setPosition(position) {
+            signaturePosition = position;
+            
+            // Atualizar visual dos botões (opcional)
+            // Aqui podemos adicionar highlight no botão selecionado
+            
+            console.log('Posição selecionada:', position);
+        }
+
+        // ============================================
+        // PRÉ-VISUALIZAÇÃO
+        // ============================================
+        function updatePreview() {
+            const preview = document.getElementById('signaturePreview');
+            
+            if (signatureType === 'text') {
+                const text = document.getElementById('signatureText').value || 'Assinado Digitalmente';
+                preview.innerHTML = `
+                    <div class="px-4 py-2 bg-white border border-gray-300 rounded shadow-sm">
+                        <p class="text-sm font-medium text-gray-800">${text}</p>
+                    </div>
+                `;
+                
+            } else if (signatureType === 'stamp') {
+                const text = document.getElementById('stampText').value || 'PAGO';
+                const isRound = stampStyle === 'round';
+                
+                preview.innerHTML = `
+                    <div class="${isRound ? 'rounded-full' : 'rounded-lg'} border-2 border-red-500 px-4 py-2 bg-white">
+                        <p class="text-sm font-bold text-red-500">${text}</p>
+                    </div>
+                `;
+                
+            } else if (signatureType === 'image' && selectedImage) {
+                preview.innerHTML = `
+                    <img src="${selectedImage.data}" class="max-h-16 max-w-full" alt="Assinatura">
+                `;
+            } else {
+                preview.innerHTML = `
+                    <div class="px-4 py-2 bg-gray-100 border border-gray-300 rounded">
+                        <p class="text-sm text-gray-500">Selecione uma imagem</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Atualizar preview quando texto muda
+        document.getElementById('signatureText').addEventListener('input', updatePreview);
+        document.getElementById('stampText').addEventListener('input', updatePreview);
+
+        // ============================================
+        // APLICAR ASSINATURA
+        // ============================================
+        async function applySignature() {
+            if (!currentFile) {
+                alert('Por favor, selecione um arquivo PDF primeiro.');
+                return;
+            }
+
+            // Validar imagem se necessário
+            if (signatureType === 'image' && !selectedImage) {
+                alert('Por favor, selecione uma imagem para usar como assinatura.');
+                return;
+            }
+
+            const applyBtn = document.getElementById('applyBtn');
+            const originalText = applyBtn.innerHTML;
+            
+            // Mostrar loading
+            applyBtn.disabled = true;
+            applyBtn.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Processando...</span>
+                </div>
+            `;
+            
+            try {
+                // Preparar dados para envio
+                const signatureData = prepareSignatureData();
+                console.log('Dados da assinatura:', signatureData);
+                
+                // Simular processamento
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Sucesso
+                alert('Assinatura aplicada com sucesso! O PDF assinado foi salvo.');
+                
+                // Voltar para início
+                backToUpload();
+                
+            } catch (error) {
+                alert('Erro ao aplicar assinatura. Tente novamente.');
+                console.error(error);
+            } finally {
+                // Restaurar botão
+                applyBtn.disabled = false;
+                applyBtn.innerHTML = originalText;
+            }
+        }
+
+        function prepareSignatureData() {
+            const pagesInput = document.getElementById('signaturePages').value.trim();
+            let pages = [];
+            
+            if (pagesInput) {
+                // Processar páginas como "1,3-5"
+                const parts = pagesInput.split(',');
+                for (const part of parts) {
+                    const trimmed = part.trim();
+                    if (trimmed.includes('-')) {
+                        const [start, end] = trimmed.split('-').map(Number);
+                        for (let i = start; i <= end; i++) {
+                            pages.push(i);
+                        }
+                    } else {
+                        pages.push(parseInt(trimmed));
+                    }
+                }
+            }
+            
+            const data = {
+                fileInfo: {
+                    name: currentFile.name,
+                    size: currentFile.size
+                },
+                signature: {
+                    type: signatureType,
+                    position: signaturePosition,
+                    pages: pages.length > 0 ? pages : 'all' // 'all' ou array
+                }
+            };
+            
+            // Adicionar dados específicos do tipo
+            if (signatureType === 'text') {
+                data.signature.text = document.getElementById('signatureText').value;
+                data.signature.style = 'text';
+                
+            } else if (signatureType === 'stamp') {
+                data.signature.text = document.getElementById('stampText').value;
+                data.signature.style = stampStyle;
+                data.signature.color = '#ef4444'; // Vermelho para carimbo
+                
+            } else if (signatureType === 'image') {
+                data.signature.image = selectedImage.data;
+                data.signature.imageName = selectedImage.name;
+                data.signature.imageType = selectedImage.type;
+            }
+            
+            return data;
+        }
+
+        // ============================================
+        // NAVEGAÇÃO
+        // ============================================
+        function backToUpload() {
+            document.getElementById('uploadScreen').classList.remove('hidden');
+            document.getElementById('signatureScreen').classList.add('hidden');
+            document.getElementById('signatureScreen').classList.remove('flex');
+            
+            // Resetar
+            currentFile = null;
+            selectedImage = null;
+            signatureType = 'text';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('imageInput').value = '';
+            document.getElementById('signaturePages').value = '';
+            document.getElementById('signatureText').value = 'Assinado Digitalmente';
+            document.getElementById('stampText').value = 'PAGO';
+            
+            // Resetar painéis
+            selectSignatureType('text');
+            selectStampStyle('round');
+            setPosition('bottom-right');
+        }
+
+        // ============================================
+        // HOTKEY ESC
+        // ============================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('signatureScreen').classList.contains('hidden')) {
+                backToUpload();
+            }
+        });
+        
+        // Adicionar animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
