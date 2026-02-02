@@ -5,7 +5,7 @@ const homeWindow = () => {
     const win = new BrowserWindow({
         width: 900,
         height: 700,
-        title: "CYFRAS - MANIPULADOR DE ARQUIVOS PDF",
+        title: "cyfras",
         icon: "src/public/img/logo.png",
         backgroundColor: "#f1f5f9",
         backgroundMaterial: "auto",

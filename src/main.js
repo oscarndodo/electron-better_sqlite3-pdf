@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Notification } = require("electron")
+const { app, BrowserWindow, ipcMain, dialog, Notification, shell } = require("electron")
 const fs = require("fs")
 const path = require("path")
 
@@ -42,11 +42,18 @@ app.whenReady().then(() => {
     signatureWindow()
   })
 
-  ipcMain.handle("open-file", (_, pathFile) => {
-    console.log(pathFile)
-    console.log("Oi")
-  })
+ipcMain.handle('open-file', async (_, pathFile) => {
+  if (!pathFile || !fs.existsSync(pathFile)) {
+    new Notification({
+      title: 'Findoc',
+      body: 'Este arquivo foi movido ou eliminado!',
+    }).show();
+    return false;
+  }
 
+  await shell.openPath(pathFile);
+  return true;
+});
 
   //Tratamento
 

@@ -34,42 +34,42 @@
         <!-- Grid de ferramentas (estilo compacto SHAREit) -->
         <div class="grid grid-cols-5 gap-4 mb-10 mt-16">
             <!-- Criar Novo -->
-            <div class="col-span-2 bg-gradient-to-tl h-52 from-blue-300 via-65% via-blue-50 to-blue-50 border border-blue-200 rounded-xl p-4 hover:shadow-md transition-shadow cursor-default group">
+            <div class="col-span-2 bg-gradient-to-tl h-52 from-blue-300 via-65% via-blue-50 to-blue-50 border border-blue-200 rounded-xl p-4 hover:shadow-md transition-shadow cursor-default group" title="Clique para criar novo arquivo.">
                 <div class="flex items-start justify-between mb-3">
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                        <i data-lucide="file-plus" class="w-5 h-5 text-white"></i>
+                        <i data-lucide="shredder" class="w-5 h-5 text-white"></i>
                     </div>
                     <span class="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded">Rápido</span>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-1">Criar PDF</h3>
-                <p class="text-gray-600 text-sm">Do zero ou usando templates</p>
+                <h3 class="font-semibold text-gray-800 mb-1">Converter PDF</h3>
+                <p class="text-gray-600 text-sm">Conver....</p>
             </div>
 
             <!-- Juntar PDFs -->
-            <div onclick="openJoin()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition-all cursor-default">
+            <div onclick="openJoin()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition-all cursor-default" title="Clique juntar varios arquivos.">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-3">
                     <i data-lucide="layers" class="w-5 h-5 text-white"></i>
                 </div>
                 <h3 class="font-semibold text-gray-800 mb-1">Juntar</h3>
-                <p class="text-gray-600 text-sm">Combine vários PDFs</p>
+                <p class="text-gray-600 text-sm">Selecione varios arquivos PDF e junte em um unico documento PDF</p>
             </div>
 
             <!-- Dividir PDF -->
-            <div onclick="openCut()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-red-300 hover:shadow-md transition-all cursor-default">
+            <div onclick="openCut()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-red-300 hover:shadow-md transition-all cursor-default" title="Clique para remover paginas de um pdf.">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mb-3">
                     <i data-lucide="scissors" class="w-5 h-5 text-white"></i>
                 </div>
                 <h3 class="font-semibold text-gray-800 mb-1">Dividir</h3>
-                <p class="text-gray-600 text-sm">Extraia páginas</p>
+                <p class="text-gray-600 text-sm">Divida o documento removendo as paginas que não precisas no PDF.</p>
             </div>
 
             <!-- Assinar -->
-            <div onclick="openSinature()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-amber-300 hover:shadow-md transition-all cursor-default">
+            <div onclick="openSinature()" class="bg-white border border-gray-200 rounded-xl p-4 hover:border-amber-300 hover:shadow-md transition-all cursor-default" title="Clique para bloquear em um PDF.">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mb-3">
-                    <i data-lucide="pen-tool" class="w-5 h-5 text-white"></i>
+                    <i data-lucide="file-lock" class="w-5 h-5 text-white"></i>
                 </div>
-                <h3 class="font-semibold text-gray-800 mb-1">Assinar</h3>
-                <p class="text-gray-600 text-sm">Adicione sua assinatura</p>
+                <h3 class="font-semibold text-gray-800 mb-1">Bloquear</h3>
+                <p class="text-gray-600 text-sm">Adicione uma senha de segurança em qualquer documento PDF.</p>
             </div>
         </div>
 
@@ -137,6 +137,7 @@
             <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
                     <div class="flex items-center justify-between">
+                        
                         <h3 class="font-semibold text-gray-800">Documentos Recentes</h3>
                         <button onclick="window.location.reload()" class="text-gray-500 hover:text-gray-700">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
@@ -235,7 +236,7 @@
     </div>
 
 
-    <script src="../../renderer.js"></script>
     <script src="../assets//js/home.js"></script>
+    <script src="../../renderer.js"></script>
 </body>
 </html>
