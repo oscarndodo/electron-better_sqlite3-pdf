@@ -5,8 +5,8 @@ const homeWindow = () => {
     const win = new BrowserWindow({
         width: 900,
         height: 700,
-        title: "Findoc",
-        icon: "../public/img/logo.png",
+        title: "CYFRAS - MANIPULADOR DE ARQUIVOS PDF",
+        icon: "src/public/img/logo.png",
         backgroundColor: "#f1f5f9",
         backgroundMaterial: "auto",
         autoHideMenuBar: true,

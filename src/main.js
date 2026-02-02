@@ -23,6 +23,7 @@ require("electron-reload")(__dirname)
 app.whenReady().then(() => {
   homeWindow()
   getAllFiles()
+  getMemory()
   //Pegar total de paginas d eum arquivo
   ipcMain.handle("pages-count", async (_, file) => {
     const pdfDoc = await PDFDocument.load(file);
@@ -39,6 +40,11 @@ app.whenReady().then(() => {
 
   ipcMain.on("open-signature-window", () => {
     signatureWindow()
+  })
+
+  ipcMain.handle("open-file", (_, pathFile) => {
+    console.log(pathFile)
+    console.log("Oi")
   })
 
 
@@ -181,6 +187,20 @@ app.whenReady().then(() => {
   function getAllFiles() {
     ipcMain.handle("get-all-files", () => {
       return select()
+    })
+  }
+
+  // Pegar espaco restante no HD
+  function getMemory(){
+    ipcMain.handle("memory", async () => {
+      const result = await getDiskInfo().then((drives) => {
+        let memory_free = 0;
+        drives.forEach(drive => {
+          memory_free += drive._available
+        });
+        return (memory_free / 1024 / 1024 / 1024).toFixed(2);
+      })
+      return {memory: result + " GB"}
     })
   }
 

@@ -30,7 +30,7 @@ function insert(valuesArray) {
 // SELECT
 
 function select() {
-    const query = db.prepare("SELECT * FROM log_files ORDER BY id DESC")
+    const query = db.prepare("SELECT * FROM log_files ORDER BY id DESC LIMIT 5")
     const result= query.all()
     return result
 }

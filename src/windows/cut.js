@@ -8,8 +8,8 @@ function cutWindow() {
         const win = new BrowserWindow({
             width: 800,
             height: 600,
-            title: "Findoc",
-            icon: "src/public/img/logo.svg",
+            title: "CYFRAS - MANIPULADOR DE ARQUIVOS PDF",
+            icon: "src/public/img/logo.png",
             autoHideMenuBar: true,
             resizable: false,
             modal: true,

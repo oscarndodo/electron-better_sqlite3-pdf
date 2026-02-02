@@ -4,8 +4,10 @@ contextBridge.exposeInMainWorld("api", {
     openJoinWindow: () => ipcRenderer.send("open-join-window"),
     openCutWindow: () => ipcRenderer.send("open-cut-window"),
     openSinature: () => ipcRenderer.send("open-signature-window"),
+    openFile: (data) => ipcRenderer.invoke("open-file", (data)),
     
 
+    getMemory: () => ipcRenderer.invoke("memory"),
     getPages: (data) => ipcRenderer.invoke("pages-count", (data)),
 
     // Tratamento

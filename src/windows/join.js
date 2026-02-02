@@ -10,8 +10,8 @@ function joinWindow() {
             height: 600,
             autoHideMenuBar: true,
             resizable: false,
-             title: "Findoc",
-        icon: "src/public/img/logo.svg",
+            title: "CYFRAS - MANIPULADOR DE ARQUIVOS PDF",
+            icon: "src/public/img/logo.png",
             modal: true,
             parent: homeWindow,
             webPreferences: {

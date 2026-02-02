@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     loadFiles()
+    const result = await window.api.getMemory()
+    document.getElementById("memory").innerText = result.memory + " armazenamento disponível"
 })
 
 function openJoin() {
@@ -11,16 +13,18 @@ function openCut() {
 }
 
 
+
+
 const loadFiles = async () => {
     const files = await window.api.getAllfiles()
     listFiles = document.getElementById("list-files")
     files.forEach((file) => {
         const color = file.type === "merge" ? "red" : "green";
         listFiles.innerHTML += `
-    <div class="px-4 py-3 hover:bg-gray-50 cursor-default">
+    <div onclick="window.api.openFile(${file.path})" class="px-4 py-3 hover:bg-gray-50 cursor-default">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 rounded bg-${color}-50 flex items-center justify-center">
+          <div class="w-8 h-8 rounded bg-${color}-500 flex items-center justify-center">
             <i data-lucide="file-text" class="w-4 h-4 text-${color}-500"></i>
           </div>
           <div>
@@ -39,12 +43,13 @@ const loadFiles = async () => {
     });
 
 
+
     function timeAgoIntl(timestamp) {
         const now = new Date();
         const date = new Date(timestamp);
         const seconds = Math.floor((now - date) / 1000);
 
-        const rtf = new Intl.RelativeTimeFormat('pt', { numeric: 'auto' });
+        const rtf = new Intl.RelativeTimeFormat('mz', { numeric: 'auto' });
 
         if (seconds < 60) return rtf.format(-seconds, 'second');
         if (seconds < 3600) return rtf.format(-Math.floor(seconds / 60), 'minute');
@@ -56,3 +61,4 @@ const loadFiles = async () => {
     }
 
 }
+
